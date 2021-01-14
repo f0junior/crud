@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography } from "@material-ui/core";
-import "./validCpf";
 import "fontsource-roboto";
 
 function RegisterForm({ submitForm }) {
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
+  const [birthDay, setBirthDay] = useState("2000-01-01");
   const [erros, setErros] = useState({ cpf: { valid: true, text: "" } });
 
   return (
@@ -21,13 +21,20 @@ function RegisterForm({ submitForm }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          submitForm({ name, cpf });
+          submitForm({ name, cpf, birthDay });
         }}
       >
         <fieldset style={{ marginBottom: "7px" }}>
           <legend>Dados Pessoais</legend>
           <TextField
             value={name}
+            type="text"
+            id="name"
+            label="Nome Completo"
+            variant="outlined"
+            required
+            fullWidth
+            margin="dense"
             onChange={(e) => {
               let re = /^[A-Za-záàâãéèêíïóôõöúçñ ]*$/;
               let vName = name;
@@ -36,16 +43,18 @@ function RegisterForm({ submitForm }) {
               }
               setName(vName);
             }}
+          />
+          <TextField
+            value={cpf}
+            error={!erros.cpf.valid}
+            helperText={erros.cpf.text}
             type="text"
-            id="name"
-            label="Nome Completo"
+            id="cpf"
+            label="CPF"
             variant="outlined"
             required
             fullWidth
             margin="dense"
-          />
-          <TextField
-            value={cpf}
             onChange={(e) => {
               let re = /^[0-9]*$/;
               let vCpf = cpf;
@@ -57,17 +66,19 @@ function RegisterForm({ submitForm }) {
             onBlur={(e) => {
               const ehValid = ValidCPF(e.target.value);
               setErros({ cpf: ehValid });
-              setCpf(e.target.value);
             }}
-            error={!erros.cpf.valid}
-            helperText={erros.cpf.text}
-            type="text"
-            id="cpf"
-            label="CPF"
+          />
+          <TextField
+            value={birthDay}
+            type="date"
+            id="birthDay"
+            label="Data de Nasc."
             variant="outlined"
             required
-            fullWidth
             margin="dense"
+            onChange={(e) => {
+              setBirthDay(e.target.value);
+            }}
           />
         </fieldset>
         <Button type="submit" variant="contained" color="primary">
@@ -79,3 +90,30 @@ function RegisterForm({ submitForm }) {
 }
 
 export default RegisterForm;
+
+function ValidCPF(strCPF) {
+  var Soma;
+  var Resto;
+  Soma = 0;
+
+  if (strCPF === "00000000000")
+    return { valid: false, text: "CPF não é válido" };
+
+  for (let i = 1; i <= 9; i++)
+    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+  Resto = (Soma * 10) % 11;
+
+  if (Resto === 10 || Resto === 11) Resto = 0;
+  if (Resto !== parseInt(strCPF.substring(9, 10)))
+    return { valid: false, text: "CPF não é válido" };
+
+  Soma = 0;
+  for (let i = 1; i <= 10; i++)
+    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+  Resto = (Soma * 10) % 11;
+
+  if (Resto === 10 || Resto === 11) Resto = 0;
+  if (Resto !== parseInt(strCPF.substring(10, 11)))
+    return { valid: false, text: "CPF não é válido" };
+  return { valid: true, text: "" };
+}
