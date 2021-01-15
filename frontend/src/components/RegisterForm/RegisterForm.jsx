@@ -9,7 +9,7 @@ function RegisterForm({ submitForm }) {
   const [erros, setErros] = useState({ cpf: { valid: true, text: "" } });
 
   return (
-    <section style={{ marginTop: "20px" }}>
+    <section id="cadastrar">
       <Typography
         component="h2"
         variant="h4"

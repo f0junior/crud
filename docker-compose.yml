@@ -22,15 +22,30 @@ services:
     environment:
       - PMA_ARBITRARY=1
   backend:
-    image: f0junior/php:latest
+    build: 
+      dockerfile: ./API/Dockerfile
+      context: .
+    image: f0junior/php
     container_name: backend
     ports:
       - "8000:8000"
     volumes:
       - type: bind
-        source: ./php
+        source: ./API
         target: /crud
     depends_on:
       - db
     links:
       - db:database
+  frontend:
+    build:
+      dockerfile: ./frontend/Dockerfile
+      context: .
+    image: f0junior/react
+    container_name: frontend
+    ports: 
+      - "3000:3000"
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /crud

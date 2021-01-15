@@ -1,5 +1,4 @@
 FROM php:8.0.0-fpm-alpine
-COPY . /crud
 WORKDIR /crud
 RUN apk update && apk add composer
 RUN docker-php-ext-install pdo_mysql

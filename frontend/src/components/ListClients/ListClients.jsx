@@ -4,7 +4,7 @@ import "fontsource-roboto";
 
 function ListClients() {
   return (
-    <section>
+    <section id="listar" style={{display: 'none'}}>
       <Typography
         component="h2"
         variant="h4"
