@@ -5,7 +5,7 @@ import "fontsource-roboto";
 function RegisterForm({ submitForm }) {
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
-  const [birthDay, setBirthDay] = useState("2000-01-01");
+  const [birthDay, setBirthDay] = useState("");
   const [erros, setErros] = useState({ cpf: { valid: true, text: "" } });
 
   return (
@@ -76,12 +76,18 @@ function RegisterForm({ submitForm }) {
             variant="outlined"
             required
             margin="dense"
+            InputLabelProps={{ shrink: true }}
             onChange={(e) => {
               setBirthDay(e.target.value);
             }}
           />
         </fieldset>
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={!erros.cpf.valid}
+        >
           Cadastrar
         </Button>
       </form>
