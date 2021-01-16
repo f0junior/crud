@@ -4,7 +4,7 @@ import "fontsource-roboto";
 
 function ListClients() {
   return (
-    <section id="listar" style={{ display: "none" }}>
+    <section id="listar">
       <Typography
         component="h2"
         variant="h4"
@@ -13,11 +13,11 @@ function ListClients() {
       >
         Lista de Clientes
       </Typography>
-      <List>
-        <ListItem alignItens="flex-start" button>
+      <List style={{ width: "70%", margin: "0 auto" }}>
+        <ListItem alignItens="flex-start" button divider selected>
           Francisco
         </ListItem>
-        <ListItem alignItens="flex-start" button>
+        <ListItem alignItens="flex-start" button divider selected>
           Jennifer
         </ListItem>
       </List>
