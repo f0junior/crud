@@ -2,11 +2,32 @@ import React, { useState } from "react";
 import { TextField, Button, Typography } from "@material-ui/core";
 import "fontsource-roboto";
 
-function RegisterForm({ submitForm }) {
+function RegisterForm({ submitForm, validations }) {
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
   const [birthDay, setBirthDay] = useState("");
   const [erros, setErros] = useState({ cpf: { valid: true, text: "" } });
+
+  function validationInput(e) {
+    e.preventDefault();
+
+    const { id, value } = e.target;
+    const newState = { ...erros };
+
+    newState[id] = validations[id](value);
+
+    setErros(newState);
+  }
+
+  function checkSubmit() {
+    for (let i in erros) {
+      if (!erros[i].valid) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   return (
     <section id="cadastrar">
@@ -21,7 +42,9 @@ function RegisterForm({ submitForm }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          submitForm({ name, cpf, birthDay });
+          if (checkSubmit()) {
+            submitForm({ name, cpf, birthDay });
+          }
         }}
       >
         <fieldset style={{ marginBottom: "7px" }}>
@@ -63,10 +86,7 @@ function RegisterForm({ submitForm }) {
               }
               setCpf(vCpf);
             }}
-            onBlur={(e) => {
-              const ehValid = ValidCPF(e.target.value);
-              setErros({ cpf: ehValid });
-            }}
+            onBlur={validationInput}
           />
           <TextField
             value={birthDay}
@@ -82,12 +102,7 @@ function RegisterForm({ submitForm }) {
             }}
           />
         </fieldset>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={!erros.cpf.valid}
-        >
+        <Button type="submit" variant="contained" color="primary" disabled={!checkSubmit()}>
           Cadastrar
         </Button>
       </form>
@@ -96,30 +111,3 @@ function RegisterForm({ submitForm }) {
 }
 
 export default RegisterForm;
-
-function ValidCPF(strCPF) {
-  var Soma;
-  var Resto;
-  Soma = 0;
-
-  if (strCPF === "00000000000")
-    return { valid: false, text: "CPF não é válido" };
-
-  for (let i = 1; i <= 9; i++)
-    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-  Resto = (Soma * 10) % 11;
-
-  if (Resto === 10 || Resto === 11) Resto = 0;
-  if (Resto !== parseInt(strCPF.substring(9, 10)))
-    return { valid: false, text: "CPF não é válido" };
-
-  Soma = 0;
-  for (let i = 1; i <= 10; i++)
-    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
-  Resto = (Soma * 10) % 11;
-
-  if (Resto === 10 || Resto === 11) Resto = 0;
-  if (Resto !== parseInt(strCPF.substring(10, 11)))
-    return { valid: false, text: "CPF não é válido" };
-  return { valid: true, text: "" };
-}
