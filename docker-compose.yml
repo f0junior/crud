@@ -29,10 +29,6 @@ services:
     container_name: backend
     ports:
       - "8000:8000"
-    volumes:
-      - type: bind
-        source: ./API
-        target: /crud
     depends_on:
       - db
     links:
@@ -45,7 +41,3 @@ services:
     container_name: frontend
     ports: 
       - "3000:3000"
-    volumes:
-      - type: bind
-        source: ./frontend
-        target: /crud
